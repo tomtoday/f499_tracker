@@ -161,3 +161,15 @@ def augment_race_data(iracing_api_client, race_data):
         print(f"Augmented {subsession_id} with fake internet points data")
 
     return augmented_race_data
+
+
+def tidy_race_data(race_data_list):
+    # race_data_list is a list of lists of dictionaries. It needs to be flattened to a single list of dictionaries
+    race_data_list = sum(race_data_list, [])
+    # create a dataframe from the list of dictionaries
+    race_data_df = pd.DataFrame(race_data_list)
+    # drop duplicates based on subsession_id and cust_id
+    race_data_df.drop_duplicates(subset=['subsession_id', 'cust_id'], inplace=True)
+    race_data_df.sort_values(by=['start_time', 'cust_id'], ascending=[False, True], inplace=True)
+    # Convert the DataFrame to a list of dictionaries
+    return race_data_df.to_dict('records')

@@ -5,11 +5,12 @@ from f499_tracker.challenge_utils import (
     construct_499_race_data
 )
 from f499_tracker.google_sheets_utils import GoogleSheets
+from f499_tracker.iracing_utils import augment_race_data, tidy_race_data
+from f499_tracker.utils import write_results_to_csv_file
 
 import time
 import gspread
 import pandas as pd
-import json
 
 
 class Tracker:
@@ -146,3 +147,30 @@ class Tracker:
 
         # convert the race_data list to a DataFrame
         return GoogleSheets.merge_api_race_data_with_existing_data(new_race_data_frame, existing_race_data_frame)
+
+    def generate_challenge_stats(self):
+        desired_season_year = 2024
+        desired_season_quarter = 3
+        desired_season_week = 12
+
+        filename_prefix = f'{desired_season_year}S{desired_season_quarter}'
+        race_data_list = []
+
+        # get the data from the API
+        api_data = self.gather_data(desired_season_year, desired_season_quarter, desired_season_week, False)
+        race_data_list.append(api_data)
+        # tidy up the data, sorting it properly
+        race_data = tidy_race_data(race_data_list)
+
+        # merge the data from the API with existing data from a Google Sheet or a CSV file
+        # race_data = Tracker.merge_race_data_with_gspread_data(race_data)
+        race_data = Tracker.merge_race_data_with_csv_data(race_data, filename_prefix)
+
+        # Make additional API calls to fill out more detail on each race
+        race_data = augment_race_data(self.iracing_api_client, race_data)
+
+        # write all the data to a local CSV and use that to upload to the Google Sheet
+        write_results_to_csv_file(race_data, filename_prefix)
+
+        # write to the gspread sheet
+        GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)
