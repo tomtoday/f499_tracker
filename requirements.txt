@@ -1,0 +1,5 @@
+gspread~=6.1.2
+oauth2client~=4.1.3
+git+https://github.com/jasondilworth56/iracingdataapi.git
+setuptools~=68.2.2
+pandas~=2.2.2
