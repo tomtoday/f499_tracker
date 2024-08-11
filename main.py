@@ -8,7 +8,6 @@ from f499_tracker.google_sheets_utils import GoogleSheets
 from f499_tracker.iracing_client import IRacingAPIHandler
 from f499_tracker.tracker import Tracker
 from f499_tracker.utils import (
-    flatten_sum,
     write_results_to_csv_file,
     write_results_to_json_file
 )

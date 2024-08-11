@@ -5,7 +5,7 @@ from datetime import timedelta
 
 def write_results_to_json_file(results, filename):
     # Write the raw results to a JSON file
-    with open(f"{filename}_raw_results.json", 'w') as jsonfile:
+    with open(f"gen_data/{filename}_raw_results.json", 'w') as jsonfile:
         json.dump(results, jsonfile)
 
 

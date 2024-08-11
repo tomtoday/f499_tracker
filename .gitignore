@@ -164,4 +164,5 @@ cython_debug/
 # project specific
 *_raw_results.json
 *data.csv
-*_key_file.json.json
+*_key_file.json
+/gen_data/
