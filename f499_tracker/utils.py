@@ -23,6 +23,7 @@ def write_results_to_csv_file(race_data_list, filename):
                   "session_link",
                   "subsession_id",
                   "car_name",
+                  "license_category",
                   "start_position",
                   "finish_position",
                   "incident_count",

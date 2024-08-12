@@ -136,6 +136,7 @@ def augment_race_data(iracing_api_client, race_data):
         # if the cache has the result for the subsession_id, use it
         single_result = race_result_cache.get(subsession_id)
         if single_result is None:
+            print(f"cache miss for subsession_id: {subsession_id}")
             # get the result for the subsession_id
             single_result = iracing_api_client.result(subsession_id)
             # cache the result using the subsession_id as the key

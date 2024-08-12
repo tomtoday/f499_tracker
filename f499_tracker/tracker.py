@@ -142,8 +142,12 @@ class Tracker:
     def merge_race_data_with_csv_data(race_data, csv_file_name):
         # convert race_data to a DataFrame
         new_race_data_frame = pd.DataFrame(race_data)
-        # Get the data from the csv file as a DataFrame
-        existing_race_data_frame = pd.read_csv(f"{csv_file_name}_data.csv")
+
+        # read the existing data from the CSV file
+        try:
+            existing_race_data_frame = pd.read_csv(f"{csv_file_name}_data.csv")
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            existing_race_data_frame = pd.DataFrame()
 
         # convert the race_data list to a DataFrame
         return GoogleSheets.merge_api_race_data_with_existing_data(new_race_data_frame, existing_race_data_frame)
