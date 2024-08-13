@@ -166,3 +166,4 @@ cython_debug/
 *data.csv
 *_key_file.json
 /gen_data/
+*.db

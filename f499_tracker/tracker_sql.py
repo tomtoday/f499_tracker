@@ -12,9 +12,8 @@ import gspread
 import pandas as pd
 
 
-class Tracker:
-    # initialize the class and create a IRacingAPIHandler instance it can use.
-    def __init__(self):
+class TrackerSQL:
+    def __init__(self, db_name='race_data.db'):
         self.api = IRacingAPIHandler()
         self.iracing_api_client = self.api.client
 
@@ -23,6 +22,9 @@ class Tracker:
         creds = ServiceAccountCredentials.from_json_keyfile_name(Config.SVC_ACCT_KEY_FILE, scope)
         client = gspread.authorize(creds)
         self.gspread_client = client
+
+        # Initialize DBHandler with the provided database name
+        self.db_handler = DBHandler(db_name=db_name)
 
     def calculate_first_zero_ex(self, week_number, source_sheet_name, source_worksheet_id=None):
         if source_worksheet_id is not None:
@@ -167,7 +169,7 @@ class Tracker:
 
         # merge the data from the API with existing data from a Google Sheet or a CSV file
         # race_data = Tracker.merge_race_data_with_gspread_data(race_data)
-        race_data = Tracker.merge_race_data_with_csv_data(race_data, filename_prefix)
+        race_data = TrackerSQL.merge_race_data_with_csv_data(race_data, filename_prefix)
 
         # Make additional API calls to fill out more detail on each race
         race_data = augment_race_data(self.iracing_api_client, race_data)
@@ -175,5 +177,9 @@ class Tracker:
         # write all the data to a local CSV and use that to upload to the Google Sheet
         write_results_to_csv_file(race_data, filename_prefix)
 
+        # now write the data to the database
+        # first convert each item in race_data to a race and race result object
+        self.db_handler.insert_race_data(race_data)
+
         # write to the gspread sheet
-        GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)
+        # GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)

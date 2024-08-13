@@ -13,13 +13,14 @@ def challenge_score_v2(race_length, race_participants, incidents, qualifying_pos
         f'race_length: {race_length}, race_participants: {race_participants}, incidents: {incidents}, '
         f'qualifying_position: {qualifying_position}, finish_pos: {finish_pos}, safety_rating: {safety_rating}')
 
-    race_length_in_minutes = convert_ticks_to_timedelta(race_length).seconds//60
+    race_length_in_minutes = convert_ticks_to_timedelta(race_length).seconds // 60
     print(f"race_length_in_minutes: {race_length_in_minutes}")
     race_time_leveller = (race_length_in_minutes // LONG_RACE_LENGTH) + 1
     qualifying_points = qualifying_score(qualifying_position, race_participants)
     race_points = race_score(finish_pos, race_participants)
     incident_points = incident_score(incidents, race_time_leveller, safety_rating)
-    print(f"race_time_leveller: {race_time_leveller}, qualifying_points: {qualifying_points}, race_points: {race_points}, incident_points: {incident_points}")
+    print(
+        f"race_time_leveller: {race_time_leveller}, qualifying_points: {qualifying_points}, race_points: {race_points}, incident_points: {incident_points}")
     calculated_challenge_score = qualifying_points + race_points + incident_points
     print(f"calculated_challenge_score: {calculated_challenge_score}")
     return calculated_challenge_score
