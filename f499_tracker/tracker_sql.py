@@ -4,7 +4,8 @@ from f499_tracker.config import Config
 from f499_tracker.challenge_utils import construct_499_race_data
 from f499_tracker.google_sheets_utils import GoogleSheets
 from f499_tracker.iracing_utils import augment_race_data, tidy_race_data
-from f499_tracker.utils import write_results_to_csv_file
+from f499_tracker.tracker import Tracker
+from f499_tracker.utils import write_results_to_csv_file, write_results_to_json_file
 from f499_tracker.db_handler import DBHandler
 
 import time
@@ -183,3 +184,11 @@ class TrackerSQL:
 
         # write to the gspread sheet
         # GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)
+
+
+    def results_from(self, start_time, end_time):
+        custo_id = 601298
+        res = self.iracing_api_client.result_search_series(cust_id=custo_id,
+                                                              start_range_begin=start_time,
+                                                              finish_range_begin=end_time)
+        write_results_to_json_file(res, f'results_{start_time}_to_{end_time}_cust_{custo_id}')
