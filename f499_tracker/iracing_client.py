@@ -12,7 +12,7 @@ class IRacingAPIHandler:
 
     def get_499_series(self):
         # List of series names to search for
-        series_names = Config.F499_SERIES_KEYWORDS
+        series_names = Config.F499_SEASON3_SERIES_KEYWORDS
 
         # Retrieve the list of series from the client
         series = self.client.series

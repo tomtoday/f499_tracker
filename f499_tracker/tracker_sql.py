@@ -4,7 +4,6 @@ from f499_tracker.config import Config
 from f499_tracker.challenge_utils import construct_499_race_data
 from f499_tracker.google_sheets_utils import GoogleSheets
 from f499_tracker.iracing_utils import augment_race_data, tidy_race_data
-from f499_tracker.tracker import Tracker
 from f499_tracker.utils import write_results_to_csv_file, write_results_to_json_file
 from f499_tracker.db_handler import DBHandler
 

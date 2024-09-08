@@ -4,7 +4,7 @@ from f499_tracker.config import Config
 from f499_tracker.challenge_utils import construct_499_race_data
 from f499_tracker.google_sheets_utils import GoogleSheets
 from f499_tracker.iracing_utils import augment_race_data, tidy_race_data
-from f499_tracker.utils import write_results_to_csv_file
+from f499_tracker.utils import write_results_to_csv_file, write_results_to_json_file
 from f499_tracker.db_handler import DBHandler
 
 import time
@@ -58,8 +58,11 @@ class Tracker:
                                                                 Config.PARTICIPANT_WORKSHEET_ID)
         # iterate over the participants
         for cust_id, driver_name in participants:
+            racing_as = driver_name
+            if driver_name == "Graeme Cessford":
+                racing_as = "Remko Barlow"
             title = f"{desired_season_year}S{desired_season_quarter} Week {desired_season_week} CustID {cust_id}"
-            print(f"{driver_name} - Customer ID: {cust_id}, {title}")
+            print(f"{racing_as} - Customer ID: {cust_id}, {title}")
 
             # raw results hold results for a single driver
             raw_results = []
@@ -86,12 +89,14 @@ class Tracker:
                         series_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
                                                                                       series_id=series_id,
                                                                                       official_only=True,
+                                                                                      race_week_num=desired_season_week - 1,
                                                                                       event_types=[Config.EVENT_TYPE],
                                                                                       season_year=desired_season_year,
                                                                                       season_quarter=desired_season_quarter)
 
                         print(f"Series: {series_name}")
                         print(f"{len(series_results)} Races")
+
 
                         for i, result in enumerate(series_results, start=1):
                             # this is where we can filter out results that do not have the proper car class
@@ -102,9 +107,8 @@ class Tracker:
 
                             raw_results.append(result)
 
-                            race_data = construct_499_race_data(result, driver_name)
+                            race_data = construct_499_race_data(result, racing_as)
                             race_data_list.append(race_data)
-
                     except Exception as e:
                         print(f"Error: {e}")
                         continue
@@ -112,19 +116,31 @@ class Tracker:
                 # Get all results for a driver regardless of series
                 try:
                     time.sleep(0.1)
-                    all_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
+                    if desired_season_week is None:
+                        all_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
                                                                                official_only=True,
                                                                                event_types=[Config.EVENT_TYPE],
                                                                                season_year=desired_season_year,
                                                                                season_quarter=desired_season_quarter,
                                                                                category_ids=[5, 6])
+                    else:
+                        all_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
+                                                                               official_only=True,
+                                                                               event_types=[Config.EVENT_TYPE],
+                                                                               season_year=desired_season_year,
+                                                                               race_week_num=desired_season_week - 1,
+                                                                               season_quarter=desired_season_quarter,
+                                                                               category_ids=[5, 6])
 
                     print("All Series")
                     print(f"{len(all_results)} Races")
+
+                    write_results_to_json_file(all_results, f"{driver_name}_{cust_id}_{desired_season_year}S{desired_season_quarter}_all_results")
+
                     for i, result in enumerate(all_results, start=1):
                         raw_results.append(result)
 
-                        race_data = construct_499_race_data(result, driver_name)
+                        race_data = construct_499_race_data(result, racing_as)
                         race_data_list.append(race_data)
 
                 except Exception as e:
@@ -151,11 +167,7 @@ class Tracker:
         # convert the race_data list to a DataFrame
         return GoogleSheets.merge_api_race_data_with_existing_data(new_race_data_frame, existing_race_data_frame)
 
-    def generate_challenge_stats(self):
-        desired_season_year = 2024
-        desired_season_quarter = 3
-        desired_season_week = 12
-
+    def generate_challenge_stats(self, desired_season_year, desired_season_quarter, desired_season_week):
         filename_prefix = f'{desired_season_year}S{desired_season_quarter}'
         race_data_list = []
 

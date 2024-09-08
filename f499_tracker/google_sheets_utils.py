@@ -70,7 +70,7 @@ class GoogleSheets:
 
         # drop duplicates based on subsession_id and cust_id
         df.drop_duplicates(subset=['subsession_id', 'cust_id'], inplace=True)
-        # sor the df by start_time, descending and cust_id
+        # sor the df by start_  time, descending and cust_id
         df.sort_values(by=['start_time', 'cust_id'], ascending=[False, True], inplace=True)
 
         # Clear the sheet so that we can write the now complete new data
@@ -90,6 +90,19 @@ class GoogleSheets:
                             {'range': 'N:N', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
                             {'range': 'O:O', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}}
                             ])
+
+    @staticmethod
+    def simple_write_to_sheet(sheet_name, worksheet_id, data):
+        sheet = GoogleSheets.get_gspread_sheet(sheet_name, worksheet_id)
+        # sheet.clear()
+        # the value of data is a two item list. First item is the header and the second item is the data
+        # Sets 'Hello world' in 'A2' cell
+        # worksheet.update([['Hello world']], 'A2')
+        sheet.update([[data[0]]], 'A1')
+        sheet.update([[data[1]]], 'A2')
+        # sheet.update('A1', data[0])
+        # sheet.update('A2', data[1])
+
 
     @staticmethod
     def merge_race_data_with_gspread_data(race_data):
