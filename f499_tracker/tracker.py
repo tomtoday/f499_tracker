@@ -116,21 +116,8 @@ class Tracker:
                 # Get all results for a driver regardless of series
                 try:
                     time.sleep(0.1)
-                    if desired_season_week is None:
-                        all_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
-                                                                               official_only=True,
-                                                                               event_types=[Config.EVENT_TYPE],
-                                                                               season_year=desired_season_year,
-                                                                               season_quarter=desired_season_quarter,
-                                                                               category_ids=[5, 6])
-                    else:
-                        all_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
-                                                                               official_only=True,
-                                                                               event_types=[Config.EVENT_TYPE],
-                                                                               season_year=desired_season_year,
-                                                                               race_week_num=desired_season_week - 1,
-                                                                               season_quarter=desired_season_quarter,
-                                                                               category_ids=[5, 6])
+                    all_results = self.api.fetch_series_results_for(cust_id, desired_season_quarter, desired_season_week,
+                                                                desired_season_year)
 
                     print("All Series")
                     print(f"{len(all_results)} Races")
@@ -152,6 +139,7 @@ class Tracker:
 
         print("Done gathering data")
         return race_data_list
+
 
     @staticmethod
     def merge_race_data_with_csv_data(race_data, csv_file_name):

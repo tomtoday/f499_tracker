@@ -22,3 +22,21 @@ class IRacingAPIHandler:
                        any(name in s['series_name'] for name in series_names)]
 
         return _499_series
+
+    def fetch_series_results_for(self, cust_id, desired_season_quarter, desired_season_week, desired_season_year):
+        if desired_season_week is None:
+            all_results = self.client.result_search_series(cust_id=cust_id,
+                                                                       official_only=True,
+                                                                       event_types=[Config.EVENT_TYPE],
+                                                                       season_year=desired_season_year,
+                                                                       season_quarter=desired_season_quarter,
+                                                                       category_ids=[5, 6])
+        else:
+            all_results = self.client.result_search_series(cust_id=cust_id,
+                                                                       official_only=True,
+                                                                       event_types=[Config.EVENT_TYPE],
+                                                                       season_year=desired_season_year,
+                                                                       race_week_num=desired_season_week - 1,
+                                                                       season_quarter=desired_season_quarter,
+                                                                       category_ids=[5, 6])
+        return all_results
