@@ -7,7 +7,7 @@ def challenge_score(start, finish, incident_count):
     return (start - finish) + (4 if incident_count == 0 else -1 * (2 * incident_count))
 
 
-def challenge_score_v2(race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating):
+def challenge_score_v2(race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating, laps_complete):
     # print the values of the parameters
     race_length_in_minutes = convert_ticks_to_timedelta(race_length).seconds // 60
     print(
@@ -21,6 +21,11 @@ def challenge_score_v2(race_length, race_participants, incidents, qualifying_pos
     print(
         f"race_time_leveller: {race_time_leveller}, qualifying_points: {qualifying_points}, race_points: {race_points}, incident_points: {incident_points}")
     calculated_challenge_score = qualifying_points + race_points + incident_points
+
+    # if the laps_completed is 0 and the incident_points is 0, then set the calculated_challenge_score to 0
+    if laps_complete == 0 and incident_points == 0:
+        calculated_challenge_score = 0
+
     print(f"calculated_challenge_score: {calculated_challenge_score}")
     return calculated_challenge_score
 
