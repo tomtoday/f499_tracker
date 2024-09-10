@@ -6,6 +6,7 @@ from f499_tracker.config import Config
 class IRacingAPIHandler:
     def __init__(self):
         if Config.IRACING_USERNAME is None or Config.IRACING_PASSWORD is None:
+            printf("IRACING_USERNAME and IRACING_PASSWORD must be set in the config file")
             return
 
         self.client = irDataClient(Config.IRACING_USERNAME, Config.IRACING_PASSWORD)

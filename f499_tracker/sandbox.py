@@ -1,4 +1,4 @@
-# create a class I can use to test iracing API calls and write out the results to a json file in the gen directory
+# create a class I can use to test iracing API calls and write out the results to a json file in the gen_data directory
 # I want to be able to call this from the main.py file
 from f499_tracker.tracker import Tracker
 from f499_tracker.utils import write_results_to_json_file

@@ -129,6 +129,9 @@ class GoogleSheets:
         # drop duplicates based on subsession_id and cust_id
         merged_df.drop_duplicates(subset=['subsession_id', 'cust_id'], inplace=True)
 
+        if merged_df.empty:
+            return []
+
         # sort the df by start_time, descending and cust_id
         merged_df.sort_values(by=['start_time', 'cust_id'], ascending=[False, True], inplace=True)
 

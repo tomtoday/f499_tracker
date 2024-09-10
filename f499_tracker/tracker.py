@@ -144,7 +144,10 @@ class Tracker:
     @staticmethod
     def merge_race_data_with_csv_data(race_data, csv_file_name):
         # convert race_data to a DataFrame
-        new_race_data_frame = pd.DataFrame(race_data)
+        if not race_data:
+            new_race_data_frame = pd.DataFrame()
+        else:
+            new_race_data_frame = pd.DataFrame(race_data)
 
         # read the existing data from the CSV file
         try:

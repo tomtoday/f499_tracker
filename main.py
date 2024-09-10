@@ -18,17 +18,20 @@ if __name__ == '__main__':
     test_api = TestAPI()
     test_api.test_subsession_results(70920172)
 
-    # tracker = Tracker()
+    tracker = Tracker()
     # # Top Dentist - Week 12 2024S3
     # tracker.generate_challenge_stats(2024, 3, 12)
 
+    ## 2024 Season 4 F499 Challenge
+    tracker.generate_challenge_stats(2024, 4, 13)
+
     end_time = datetime.now()
 
-    # if Config.LAST_RUN_SHEET_ID:
-    #     end_time_utc = end_time.astimezone(pytz.utc)
-    #     time_string = end_time_utc.strftime('%Y-%m-%d %H:%M:%S %Z')
-    #     last_updated_data = ["Last updated:",f"{time_string}"]
-    #     GoogleSheets.simple_write_to_sheet(Config.TRACKER_SHEET_NAME, Config.LAST_RUN_SHEET_ID, last_updated_data)
+    if Config.LAST_RUN_SHEET_ID:
+        end_time_utc = end_time.astimezone(pytz.utc)
+        time_string = end_time_utc.strftime('%Y-%m-%d %H:%M:%S %Z')
+        last_updated_data = ["Last updated:",f"{time_string}"]
+        GoogleSheets.simple_write_to_sheet(Config.TRACKER_SHEET_NAME, Config.LAST_RUN_SHEET_ID, last_updated_data)
 
     elapsed_time = end_time - start_time
     print(f"end_time: {end_time}")

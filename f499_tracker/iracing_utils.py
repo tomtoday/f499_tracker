@@ -167,6 +167,11 @@ def augment_race_data(iracing_api_client, race_data):
 def tidy_race_data(race_data_list):
     # race_data_list is a list of lists of dictionaries. It needs to be flattened to a single list of dictionaries
     race_data_list = sum(race_data_list, [])
+
+    # return race_data_list if it is empty
+    if not race_data_list:
+        return []
+
     # create a dataframe from the list of dictionaries
     race_data_df = pd.DataFrame(race_data_list)
     # drop duplicates based on subsession_id and cust_id

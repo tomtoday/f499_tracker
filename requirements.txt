@@ -1,6 +1,7 @@
 gspread~=6.1.2
 oauth2client~=4.1.3
-iracingdataapi @ git+https://github.com/jasondilworth56/iracingdataapi.git
+iracingdataapi~=1.2.2
 setuptools~=68.2.2
 pandas~=2.2.2
 sqlalchemy~=2.0.30
+pytz~=2024.1
