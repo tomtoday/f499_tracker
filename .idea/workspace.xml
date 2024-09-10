@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e837852c-03b7-4d9b-82da-e3930eb8ea93" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/f499_tracker.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/f499_tracker.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/f499_tracker/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/f499_tracker/google_sheets_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/google_sheets_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/f499_tracker/iracing_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/iracing_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/f499_tracker/challenge_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/challenge_utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/f499_tracker/iracing_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/iracing_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/f499_tracker/sandbox.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/sandbox.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/f499_tracker/tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/tracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +59,7 @@
       <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
       <window_info anchor="bottom" id="HfCacheToolWindow" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="0" visible="true" weight="0.2335689" />
+      <window_info anchor="bottom" id="Version Control" order="0" weight="0.2335689" />
       <window_info anchor="bottom" id="Problems" order="1" />
       <window_info anchor="bottom" id="Problems View" order="2" />
       <window_info anchor="bottom" id="Terminal" order="3" weight="0.2335689" />
@@ -73,7 +67,7 @@
       <window_info anchor="bottom" id="Python Packages" order="5" weight="0.1" />
       <window_info anchor="bottom" id="Python Console" order="6" weight="0.1" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.2335689" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.2335689" />
+      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.2335689" />
       <window_info anchor="bottom" id="Find" order="7" weight="0.3305" />
       <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
       <window_info anchor="right" id="Coverage" show_stripe_button="false" side_tool="true" />
@@ -185,7 +179,7 @@
       <option name="presentableId" value="Default" />
       <updated>1725919082115</updated>
       <workItem from="1725919085345" duration="1870000" />
-      <workItem from="1725926032180" duration="5410000" />
+      <workItem from="1725926032180" duration="7287000" />
     </task>
     <servers />
   </component>
@@ -208,7 +202,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/f499_tracker/iracing_utils.py</url>
-          <line>168</line>
+          <line>169</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -225,7 +219,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/f499_tracker$run_main.coverage" NAME="run main Coverage Results" MODIFIED="1725930301565" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/f499_tracker$run_main.coverage" NAME="run main Coverage Results" MODIFIED="1725932376443" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/f499_tracker$tracker.coverage" NAME="tracker Coverage Results" MODIFIED="1725926252813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/f499_tracker" />
     <SUITE FILE_PATH="coverage/f499_tracker$main.coverage" NAME="main Coverage Results" MODIFIED="1725926223467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/f499_tracker$config.coverage" NAME="config Coverage Results" MODIFIED="1725926789929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/f499_tracker" />

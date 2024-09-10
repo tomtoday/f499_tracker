@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # tracker.generate_challenge_stats(2024, 3, 12)
 
     ## 2024 Season 4 F499 Challenge
-    tracker.generate_challenge_stats(2024, 4, 13)
+    tracker.generate_challenge_stats(2024, 4, 1)
 
     end_time = datetime.now()
 

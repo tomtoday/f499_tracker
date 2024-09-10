@@ -155,7 +155,8 @@ def augment_race_data(iracing_api_client, race_data):
                                                            result['incident_count'],
                                                            result['start_position'],
                                                            result['finish_position'],
-                                                           result['new_sub_level']
+                                                           result['new_sub_level'],
+                                                           result['laps_complete']
                                                            )
 
         augmented_race_data.append(result)

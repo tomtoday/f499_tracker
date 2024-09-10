@@ -116,4 +116,5 @@ def construct_499_race_data(raw_result, racer_name):
         "cust_id": raw_result['cust_id'],
         "car_name": raw_result['car_name'],
         "license_category": raw_result['license_category'],
+        "laps_complete": raw_result['license_category'],
     }
