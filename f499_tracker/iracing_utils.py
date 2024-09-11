@@ -122,44 +122,55 @@ def augment_race_data(iracing_api_client, race_data):
     # create a dictionary to cache race results that we retrieve from the API
     race_result_cache = {}
 
-    for i, result in enumerate(race_data, start=1):
+    for i, simple_result in enumerate(race_data, start=1):
         # first check to see if this result has already been augmented
         # you know if it has been augmented if it has valid values for the keys in DETAIL_DATA_KEYS:
 
-        if all(result.get(key) not in [None, ''] and not pd.isna(result.get(key)) for key in DETAIL_DATA_KEYS):
-            print(f"Skipping {result['subsession_id']} because it has already been augmented")
-            augmented_race_data.append(result)
+        if all(simple_result.get(key) not in [None, ''] and not pd.isna(simple_result.get(key)) for key in DETAIL_DATA_KEYS):
+            print(f"Skipping {simple_result['subsession_id']} because it has already been augmented")
+            augmented_race_data.append(simple_result)
             continue
 
-        subsession_id = result['subsession_id']
+        subsession_id = simple_result['subsession_id']
 
         # if the cache has the result for the subsession_id, use it
-        single_result = race_result_cache.get(subsession_id)
-        if single_result is None:
+        detailed_api_result = race_result_cache.get(subsession_id)
+        if detailed_api_result is None:
             print(f"cache miss for subsession_id: {subsession_id}")
             # get the result for the subsession_id
-            single_result = iracing_api_client.result(subsession_id)
+            detailed_api_result = iracing_api_client.result(subsession_id)
             # cache the result using the subsession_id as the key
-            race_result_cache[subsession_id] = single_result
+            race_result_cache[subsession_id] = detailed_api_result
+
+        # This detailed result from the api contains more information than is in the simple result object.
+        # This is where we need to make sure we have the correct category. If we don't, we need to skip this result
+        # and not add it to the augmented_race_data list
+        # The primary example of this case in a INDYCAR series result. The simple result is categorized as Forumla.
+        # When you get the detailed result, it is categorized as Oval when the series is at an Oval track.
+        # We need to skip this result because dentists don't drive ovals!
+        if detailed_api_result.get('license_category') != simple_result.get('license_category'):
+            print(f"Skipping {subsession_id} because it is not the correct category")
+            continue
+
 
         # extract the iracing values from the result
-        extracted_data = extract_values_from_race_result(single_result, result['cust_id'])
+        extracted_data = extract_values_from_race_result(detailed_api_result, simple_result['cust_id'])
 
         # add the extracted data to the race_data
-        result.update(extracted_data)
+        simple_result.update(extracted_data)
 
         # calculate the challenge score v2
-        racing_time = result['average_lap'] * result['laps_complete']
-        result['challenge_points_v2'] = challenge_score_v2(racing_time,
-                                                           result['num_entries'],
-                                                           result['incident_count'],
-                                                           result['start_position'],
-                                                           result['finish_position'],
-                                                           result['new_sub_level'],
-                                                           result['laps_complete']
+        racing_time = simple_result['average_lap'] * simple_result['laps_complete']
+        simple_result['challenge_points_v2'] = challenge_score_v2(racing_time,
+                                                           simple_result['num_entries'],
+                                                           simple_result['incident_count'],
+                                                           simple_result['start_position'],
+                                                           simple_result['finish_position'],
+                                                           simple_result['new_sub_level'],
+                                                           simple_result['laps_complete']
                                                            )
 
-        augmented_race_data.append(result)
+        augmented_race_data.append(simple_result)
         print(f"Augmented {subsession_id} with fake internet points data")
 
     return augmented_race_data
