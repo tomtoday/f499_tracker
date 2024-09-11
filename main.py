@@ -15,15 +15,15 @@ if __name__ == '__main__':
     start_time = datetime.now()
     print(f"start_time: {start_time}")
 
-    test_api = TestAPI()
-    test_api.test_subsession_results(70920172)
+    # test_api = TestAPI()
+    # test_api.test_subsession_results(70920172)
 
     tracker = Tracker()
     # # Top Dentist - Week 12 2024S3
     # tracker.generate_challenge_stats(2024, 3, 12)
 
     ## 2024 Season 4 F499 Challenge
-    tracker.generate_challenge_stats(2024, 4, 1)
+    tracker.generate_challenge_stats(2024, 4 )
 
     end_time = datetime.now()
 

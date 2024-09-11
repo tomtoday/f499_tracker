@@ -86,7 +86,15 @@ class Tracker:
 
                     try:
                         time.sleep(0.1)
-                        series_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
+                        if desired_season_week is None:
+                            series_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
+                                                                                          series_id=series_id,
+                                                                                          official_only=True,
+                                                                                          event_types=[Config.EVENT_TYPE],
+                                                                                          season_year=desired_season_year,
+                                                                                          season_quarter=desired_season_quarter)
+                        else:
+                            series_results = self.iracing_api_client.result_search_series(cust_id=cust_id,
                                                                                       series_id=series_id,
                                                                                       official_only=True,
                                                                                       race_week_num=desired_season_week - 1,
@@ -158,7 +166,7 @@ class Tracker:
         # convert the race_data list to a DataFrame
         return GoogleSheets.merge_api_race_data_with_existing_data(new_race_data_frame, existing_race_data_frame)
 
-    def generate_challenge_stats(self, desired_season_year, desired_season_quarter, desired_season_week):
+    def generate_challenge_stats(self, desired_season_year, desired_season_quarter, desired_season_week=None):
         filename_prefix = f'{desired_season_year}S{desired_season_quarter}'
         race_data_list = []
 
