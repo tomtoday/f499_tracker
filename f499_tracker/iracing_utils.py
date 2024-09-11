@@ -148,7 +148,9 @@ def augment_race_data(iracing_api_client, race_data):
         # The primary example of this case in a INDYCAR series result. The simple result is categorized as Forumla.
         # When you get the detailed result, it is categorized as Oval when the series is at an Oval track.
         # We need to skip this result because dentists don't drive ovals!
-        if detailed_api_result.get('license_category') != simple_result.get('license_category'):
+        normalized_category_from_detailed_results = detailed_api_result.get('license_category', '').replace('_', ' ').lower()
+        normalized_category_from_series_results = simple_result.get('license_category', '').replace('_', ' ').lower()
+        if normalized_category_from_detailed_results != normalized_category_from_series_results:
             print(f"Skipping {subsession_id} because it is not the correct category")
             continue
 
