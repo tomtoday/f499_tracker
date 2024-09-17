@@ -21,6 +21,7 @@ class TestChallengeScoreV2(TestCase):
         ("high_safety_rating", SPRINT_RACE_IN_TICKS, 10, 5, 5, 5, 451, 45, -1.0),
         ("ROAR_result", ROAR_RACE_IN_TICKS, 25, 0, 6, 12, 490, 150, 18.8),
         ("many_incidents", SPRINT_RACE_IN_TICKS, 10, 16, 5, 5, 325, 20, -5.0),
+        ("missed_race", 0, 35, 0, 11, 33, 241, 0, 0),
     ])
     def test_challenge_score_v2(self, name, race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating, laps_complete, expected):
         result = challenge_score_v2(
