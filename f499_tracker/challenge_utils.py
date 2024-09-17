@@ -23,7 +23,7 @@ def challenge_score_v2(race_length, race_participants, incidents, qualifying_pos
     calculated_challenge_score = qualifying_points + race_points + incident_points
 
     # if the laps_completed is 0 and the incident_points is 0, then set the calculated_challenge_score to 0
-    if laps_complete == 0 and incident_points == 0:
+    if laps_complete == 0 and incidents == 0:
         calculated_challenge_score = 0
 
     print(f"calculated_challenge_score: {calculated_challenge_score}")
@@ -79,6 +79,8 @@ def incident_score(incidents, race_time_leveller, safety_rating):
         if safety_rating < 300:
             score = score * 1.05
 
+    # round score to the nearest tenth
+    score = round(score, 1)
     return score
 
 
