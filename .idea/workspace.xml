@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e837852c-03b7-4d9b-82da-e3930eb8ea93" name="Changes" comment="make week parameter optional">
+    <list default="true" id="e837852c-03b7-4d9b-82da-e3930eb8ea93" name="Changes" comment="iracing api data can be... surprising">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/f499_tracker/iracing_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/iracing_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/f499_tracker/challenge_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/f499_tracker/challenge_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,10 +27,25 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_ROAR_result.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_enduro_grand_slam_from_pole.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_grand_slam_from_pole.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_long_race.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_many_incidents.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_no_incidents.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_off_da_pace.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_sprint_grand_slam_from_pole.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_with_incidents.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_zero_laps_complete.executor": "Run",
+    "Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_zeroex_no_laps.executor": "Run",
+    "Python tests.Python tests for test_iracing_utils.TestIracingUtils.executor": "Run",
+    "Python tests.Unittests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_6_low_safety_rating.executor": "Run",
     "Python.config.executor": "Run",
     "Python.iracing_utils.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.run main.executor": "Debug",
+    "Python.run main.executor": "Run",
     "Python.tracker.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -49,8 +65,8 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" show_stripe_button="false" />
       <window_info id="Learn" show_stripe_button="false" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20472918" />
-      <window_info id="Commit" order="1" weight="0.20472918" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.07417138" />
+      <window_info id="Commit" order="1" weight="0.20432498" />
       <window_info id="Welcome to GitHub Copilot" order="2" show_stripe_button="false" />
       <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
@@ -65,8 +81,8 @@
       <window_info anchor="bottom" id="Services" order="4" />
       <window_info anchor="bottom" id="Python Packages" order="5" weight="0.1" />
       <window_info anchor="bottom" id="Python Console" order="6" weight="0.1" />
-      <window_info active="true" anchor="bottom" id="Debug" order="7" visible="true" weight="0.329682" />
-      <window_info anchor="bottom" id="Run" order="8" weight="0.329682" />
+      <window_info anchor="bottom" id="Debug" order="7" weight="0.32984126" />
+      <window_info active="true" anchor="bottom" id="Run" order="8" visible="true" weight="0.32984126" />
       <window_info anchor="bottom" id="Find" order="9" weight="0.3305" />
       <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
       <window_info anchor="right" id="Coverage" show_stripe_button="false" side_tool="true" />
@@ -77,7 +93,7 @@
       <window_info anchor="right" id="Maven" order="4" weight="0.25" />
       <window_info anchor="right" id="Plots" order="5" weight="0.1" />
       <window_info anchor="right" id="github.copilotToolWindow" order="6" show_stripe_button="false" />
-      <window_info anchor="right" id="GitHub Copilot Chat" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="GitHub Copilot Chat" order="7" weight="0.33003235" />
       <window_info anchor="right" id="SciView" order="8" weight="0.33003235" />
     </layout>
   </component>
@@ -86,41 +102,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.run main">
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="f499_tracker" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <EXTENSION ID="net.ashald.envfile">
-        <option name="IS_ENABLED" value="true" />
-        <option name="IS_SUBST" value="false" />
-        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
-        <option name="IS_IGNORE_MISSING_FILES" value="false" />
-        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
-        <ENTRIES>
-          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
-          <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH=".env" />
-        </ENTRIES>
-      </EXTENSION>
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2">
     <configuration name="run main" type="PythonConfigurationType" factoryName="Python">
       <module name="f499_tracker" />
       <option name="ENV_FILES" value="" />
@@ -156,13 +138,101 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for test_challenge_utils.TestChallengeScoreV2" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="f499_tracker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/f499_tracker" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_challenge_utils.TestChallengeScoreV2&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="f499_tracker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/f499_tracker" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_sprint_grand_slam_from_pole" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="f499_tracker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/f499_tracker" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_sprint_grand_slam_from_pole&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_with_incidents" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="f499_tracker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/f499_tracker" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_with_incidents&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_6_low_safety_rating" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="f499_tracker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/f499_tracker" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_6_low_safety_rating&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.run main" />
-      <item itemvalue="Python.main" />
+      <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2" />
+      <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_sprint_grand_slam_from_pole" />
+      <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_with_incidents" />
+      <item itemvalue="Python tests.Unittests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_6_low_safety_rating" />
+      <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
+        <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2" />
+        <item itemvalue="Python tests.Unittests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_6_low_safety_rating" />
+        <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2" />
+        <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_with_incidents" />
+        <item itemvalue="Python tests.Python tests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_sprint_grand_slam_from_pole" />
       </list>
     </recent_temporary>
   </component>
@@ -185,7 +255,12 @@
       <workItem from="1725919085345" duration="1870000" />
       <workItem from="1725926032180" duration="9461000" />
       <workItem from="1726011973813" duration="177000" />
-      <workItem from="1726013606698" duration="2724000" />
+      <workItem from="1726013606698" duration="3077000" />
+      <workItem from="1726060413568" duration="1780000" />
+      <workItem from="1726534801369" duration="121000" />
+      <workItem from="1726534960430" duration="30000" />
+      <workItem from="1726535021373" duration="4565000" />
+      <workItem from="1726588370089" duration="2351000" />
     </task>
     <task id="LOCAL-00001" summary="make week parameter optional">
       <option name="closed" value="true" />
@@ -195,7 +270,23 @@
       <option name="project" value="LOCAL" />
       <updated>1726013915561</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Handle cases where series results and detail results have different categories">
+      <option name="closed" value="true" />
+      <created>1726016411215</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1726016411215</updated>
+    </task>
+    <task id="LOCAL-00003" summary="iracing api data can be... surprising">
+      <option name="closed" value="true" />
+      <created>1726061579266</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1726061579266</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,26 +305,40 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="make week parameter optional" />
-    <option name="LAST_COMMIT_MESSAGE" value="make week parameter optional" />
+    <MESSAGE value="Handle cases where series results and detail results have different categories" />
+    <MESSAGE value="iracing api data can be... surprising" />
+    <option name="LAST_COMMIT_MESSAGE" value="iracing api data can be... surprising" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/f499_tracker/iracing_utils.py</url>
-          <line>150</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/f499_tracker/tracker.py</url>
           <line>183</line>
           <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/f499_tracker/iracing_utils.py</url>
+          <line>152</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/f499_tracker/challenge_utils.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/f499_tracker/challenge_utils.py</url>
+          <line>11</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/f499_tracker$run_main.coverage" NAME="run main Coverage Results" MODIFIED="1726016249679" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/f499_tracker$.coverage" NAME=" Coverage Results" MODIFIED="1726597194737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/f499_tracker" />
+    <SUITE FILE_PATH="coverage/f499_tracker$Unittests_for_test_challenge_utils_TestChallengeScoreV2_test_challenge_score_v2_6_low_safety_rating.coverage" NAME="Unittests for test_challenge_utils.TestChallengeScoreV2.test_challenge_score_v2_6_low_safety_rating Coverage Results" MODIFIED="1726596906849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/f499_tracker" />
+    <SUITE FILE_PATH="coverage/f499_tracker$run_main.coverage" NAME="run main Coverage Results" MODIFIED="1726061463731" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/f499_tracker$tracker.coverage" NAME="tracker Coverage Results" MODIFIED="1725926252813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/f499_tracker" />
     <SUITE FILE_PATH="coverage/f499_tracker$main.coverage" NAME="main Coverage Results" MODIFIED="1725926223467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/f499_tracker$config.coverage" NAME="config Coverage Results" MODIFIED="1725926789929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/f499_tracker" />
