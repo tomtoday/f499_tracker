@@ -120,3 +120,36 @@ def construct_499_race_data(raw_result, racer_name):
         "license_category": raw_result['license_category'],
         "laps_complete": raw_result['license_category'],
     }
+
+
+def sr_weight(current_sr):
+    if current_sr < 200:
+        return 1.0
+    elif current_sr < 280:
+        return 1.05
+    elif current_sr < 380:
+        return 1.1
+    elif current_sr < 480:
+        return 1.15
+    elif current_sr <= 499:
+        return 1.2
+
+def dentist_ir(earned_ir, current_sr):
+    print(f"IR Earned in race: {earned_ir}, Current driver SR: {current_sr}")
+    sr_modifier = map_sr_modifier(current_sr)
+    print(f"Dentist SR Modifier: {sr_modifier}")
+    adjusted_ir = earned_ir * sr_modifier
+    weighting = sr_weight(current_sr)
+    # the result should be an integer, rounded to the nearest whole number
+    result = round(adjusted_ir * weighting)
+    result = round(adjusted_ir)
+    print(f"Dentist Adjusted IR: {result} (lost IR: {earned_ir - result})")
+    return result
+
+
+def map_sr_modifier(input_value, min_input=100, max_input=499, min_output=0.50, max_output=1.0):
+    # Basic linear mapping calculation
+    result = min_output + ((input_value - min_input) / (max_input - min_input)) * (max_output - min_output)
+    return result
+
+
