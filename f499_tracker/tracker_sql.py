@@ -5,7 +5,7 @@ from f499_tracker.challenge_utils import construct_499_race_data
 from f499_tracker.google_sheets_utils import GoogleSheets
 from f499_tracker.iracing_utils import augment_race_data, tidy_race_data
 from f499_tracker.utils import write_results_to_csv_file, write_results_to_json_file
-from f499_tracker.db_handler import DBHandler
+from f499_tracker.db_handler import DBHandler, flatten_race_results
 
 import time
 import gspread
@@ -139,6 +139,21 @@ class TrackerSQL:
         print("Done gathering data")
         return race_data_list
 
+    def get_new_races(self, current_race_data):
+        # the current_race_data is a list of dictionaries of races from the API
+        # each one of the items in the list is a dictionary with a key of `subsession_id` and `cust_id`
+        # The database will have race_results that also contain `subsession_id` and `cust_id`
+        # For each item in current_race_data, we need to check if there is a corresponding row in the database
+        # If there is, that item can be skipped. If there is not, then add this item to a new list that will be returned
+        new_race_data = []
+        for race in current_race_data:
+            # check the database to see if we have seen this one
+            if not self.db_handler.race_exists(race['subsession_id'], race['cust_id']):
+                new_race_data.append(race)
+        return new_race_data
+
+
+
     @staticmethod
     def merge_race_data_with_csv_data(race_data, csv_file_name):
         # convert race_data to a DataFrame
@@ -153,11 +168,7 @@ class TrackerSQL:
         # convert the race_data list to a DataFrame
         return GoogleSheets.merge_api_race_data_with_existing_data(new_race_data_frame, existing_race_data_frame)
 
-    def generate_challenge_stats(self):
-        desired_season_year = 2024
-        desired_season_quarter = 3
-        desired_season_week = 12
-
+    def generate_challenge_stats(self, desired_season_year, desired_season_quarter, desired_season_week=None):
         filename_prefix = f'{desired_season_year}S{desired_season_quarter}'
         race_data_list = []
 
@@ -169,20 +180,30 @@ class TrackerSQL:
 
         # merge the data from the API with existing data from a Google Sheet or a CSV file
         # race_data = Tracker.merge_race_data_with_gspread_data(race_data)
-        race_data = TrackerSQL.merge_race_data_with_csv_data(race_data, filename_prefix)
+        # race_data = TrackerSQL.merge_race_data_with_csv_data(race_data, filename_prefix)
+        new_race_data = self.get_new_races(race_data)
 
-        # Make additional API calls to fill out more detail on each race
-        race_data = augment_race_data(self.iracing_api_client, race_data)
+        if new_race_data:
+            # Make additional API calls to fill out more
+            # Make additional API calls to fill out more detail on each race
+            new_race_data = augment_race_data(self.iracing_api_client, new_race_data)
 
-        # write all the data to a local CSV and use that to upload to the Google Sheet
-        write_results_to_csv_file(race_data, filename_prefix)
+            # now write the data to the database
+            # first convert each item in race_data to a race and race result object
+            self.db_handler.insert_race_data(new_race_data)
 
-        # now write the data to the database
-        # first convert each item in race_data to a race and race result object
-        self.db_handler.insert_race_data(race_data)
-
-        # write to the gspread sheet
+        # temp, update the results with challenge_points_v3
+        self.db_handler.update_all_results()
         # GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)
+
+        # select all the data from the database and convert it to a DataFrame
+        all_race_results = self.db_handler.get_race_results(None, 2024)
+        all_race_results = flatten_race_results(all_race_results)
+        # convert to all_race_results to a pandas DataFrame
+        # convert all_race_results to a pandas DataFrame
+        all_race_results_df = pd.DataFrame([result for result in all_race_results])
+
+        GoogleSheets.clear_and_write_results_to_tracking_sheet(all_race_results_df)
 
 
     def results_from(self, start_time, end_time):

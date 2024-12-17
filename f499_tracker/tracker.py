@@ -4,7 +4,7 @@ from f499_tracker.config import Config
 from f499_tracker.challenge_utils import construct_499_race_data
 from f499_tracker.google_sheets_utils import GoogleSheets
 from f499_tracker.iracing_utils import augment_race_data, tidy_race_data
-from f499_tracker.utils import write_results_to_csv_file, write_results_to_json_file
+from f499_tracker.utils import write_results_to_csv_file, write_results_to_json_file, pretty_print_json
 from f499_tracker.db_handler import DBHandler
 
 import time
@@ -49,6 +49,28 @@ class Tracker:
             first_races.append(first_race)
 
         return first_races
+
+    def gather_data_for_league(self, league_id, desired_season):
+        # this is the aggregate list for all drivers
+        league_info = self.iracing_api_client.league_get(league_id)
+        season_info = self.iracing_api_client.league_seasons(league_id)
+
+        season_info = self.iracing_api_client.league_season_sessions(league_id, desired_season)
+        # iterate over the items in season_sessions, pull out the property `subsession_id` and use it to get the results
+        # for each session
+        results = []
+        for session in season_info['sessions']:
+            subsession_id = session['subsession_id']
+            try:
+                time.sleep(0.1)
+                result = self.iracing_api_client.result(subsession_id)
+                results.append(result)
+            except Exception as e:
+                print(f"Error: {e}")
+                continue
+        race_data = construct_499_race_data(result)
+
+        return  race_data
 
     def gather_data(self, desired_season_year, desired_season_quarter, desired_season_week, limit_series=False):
         # this is the aggregate list for all drivers
@@ -166,10 +188,12 @@ class Tracker:
         # convert the race_data list to a DataFrame
         return GoogleSheets.merge_api_race_data_with_existing_data(new_race_data_frame, existing_race_data_frame)
 
-    def generate_challenge_stats(self, desired_season_year, desired_season_quarter, desired_season_week=None):
-        filename_prefix = f'{desired_season_year}S{desired_season_quarter}'
-        race_data_list = []
+    def generate_challenge_stats_for_league(self, league_id, desired_season: None):
+        # get the data from the API
+        api_data = self.gather_data_for_league(league_id, desired_season)
+        write_results_to_json_file(api_data, f"league_{league_id}_detail_results_raw_results")
 
+    def generate_challenge_stats(self, desired_season_year, desired_season_quarter, desired_season_week=None):
         # get the data from the API
         api_data = self.gather_data(desired_season_year, desired_season_quarter, desired_season_week, False)
         race_data_list.append(api_data)

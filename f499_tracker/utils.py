@@ -79,3 +79,7 @@ def convert_ticks_to_timedelta(ticks):
     # Convert ticks to seconds
     total_seconds = ticks / 10000
     return timedelta(seconds=total_seconds)
+
+
+def pretty_print_json(json_data):
+    print(json.dumps(json_data, indent=2))

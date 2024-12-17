@@ -26,6 +26,7 @@ class RaceResult(Base):
     average_lap = Column(Float)
     laps_complete = Column(Integer)
     challenge_points_v2 = Column(Float)
+    challenge_points_v3 = Column(Float)
 
     race = relationship('Race', back_populates='results')
     __table_args__ = (UniqueConstraint('race_id', 'cust_id', name='_race_cust_uc'),)

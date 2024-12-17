@@ -1,3 +1,5 @@
+from unittest.mock import inplace
+
 import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
@@ -73,8 +75,15 @@ class GoogleSheets:
         # sor the df by start_  time, descending and cust_id
         df.sort_values(by=['start_time', 'cust_id'], ascending=[False, True], inplace=True)
 
+        GoogleSheets.clear_and_write_results_to_tracking_sheet(df)
+
+    @staticmethod
+    def clear_and_write_results_to_tracking_sheet(df):
+        df = GoogleSheets.normalize_race_results_dataframe(df)
+
+        sheet = GoogleSheets.get_gspread_sheet(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID)
         # Clear the sheet so that we can write the now complete new data
-        sheet.clear()
+        # sheet.clear()
         # write df to the sheet, including the header
         sheet.update([df.columns.values.tolist()] + df.values.tolist())
 
@@ -90,6 +99,23 @@ class GoogleSheets:
                             {'range': 'N:N', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
                             {'range': 'O:O', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}}
                             ])
+
+    @staticmethod
+    def normalize_race_results_dataframe(df):
+        # Convert Timestamp objects to strings with timezone info
+        for column in df.select_dtypes(include=['datetime64[ns]']).columns:
+            df[column] = df[column].apply(lambda x: x.isoformat() if pd.notnull(x) else '')
+
+        # remove some columns
+        df.drop(columns=['id', 'race_id', '_499_points'], inplace=True, errors='ignore')
+
+        # Sort the DataFrame by column names
+        df = df.reindex(columns=Config.SHEET_COLUMN_NAMES.keys())
+
+        # rename columns
+        df.rename(columns=Config.SHEET_COLUMN_NAMES, inplace=True)
+
+        return df
 
     @staticmethod
     def simple_write_to_sheet(sheet_name, worksheet_id, data):
