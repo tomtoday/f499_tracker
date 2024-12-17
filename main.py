@@ -47,8 +47,8 @@ def league_season_run():
 def latest_season_run():
     start_time = datetime.now()
     print(f"start_time: {start_time}")
-    tracker = TrackerSQL('2024S4_testing.db')
-    tracker.generate_challenge_stats(2024, 4)
+    tracker = TrackerSQL()
+    tracker.generate_challenge_stats(2025, 1)
 
     end_time = datetime.now()
     mark_last_run(end_time)
@@ -73,15 +73,3 @@ if __name__ == '__main__':
 
     latest_season_run()
 
-
-    # tracker = TrackerSQL('2024S4_testing.db')
-    # tracker.db_handler.update_all_results()
-    # race_results = tracker.db_handler.get_race_results(None, 2024)
-    # # use a list comprehension to print the car_name and incident_count of each item in race_results
-    # [print(f"Driver: {result.racer_name}\n"
-    #        f"Race Date: {result.race.start_time}\n"
-    #        f"Car Name: {result.car_name}\n"
-    #        f"Incident Count: {result.incident_count}\n"
-    #        f"challenge_score_v2: {result.challenge_points_v2}\n"
-    #        f"challenge_score_v3: {result.challenge_points_v3}\n"
-    #        f"--------------\n") for result in race_results]

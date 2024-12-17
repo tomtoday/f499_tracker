@@ -26,20 +26,15 @@ class Config:
     # Google Sheets constants
     # TRACKER_SHEET_NAME = "F499 Tracker v3"
     # TRACKER_SHEET_NAME = "Top Dentist 2024S3W12 Tracker"
-    TRACKER_SHEET_NAME = "F499 2024S4 Challenge"
+    # TRACKER_SHEET_NAME = "F499 2024S4 Challenge"
+    TRACKER_SHEET_NAME = "F499 2025S1 Challenge"
 
     # PARTICIPANT_WORKSHEET_ID = 935466926
     PARTICIPANT_WORKSHEET_ID = 1419950067
     SERIES_WORKSHEET_ID = 2085237774
     RESULTS_WORKSHEET_ID = 1416763316
-    LAST_RUN_SHEET_ID = None
-    # LAST_RUN_SHEET_ID = 1483679123
-
-    # 2025S1 testing
-    # https://docs.google.com/spreadsheets/d/1iwk2auxXz_33w2Fky4vmDK3NMX5tYKst92VVqdSVi40/edit?usp=sharing
-    PARTICIPANT_WORKSHEET_ID = 0
-    TRACKER_SHEET_NAME = "2025S1 F499 Testing"
-    RESULTS_WORKSHEET_ID = 1235312928
+    # LAST_RUN_SHEET_ID = None
+    LAST_RUN_SHEET_ID = 1483679123
 
     SHEET_COLUMN_NAMES = {
         'season_year': 'Year',

@@ -197,7 +197,7 @@ class TrackerSQL:
         # GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)
 
         # select all the data from the database and convert it to a DataFrame
-        all_race_results = self.db_handler.get_race_results(None, 2024)
+        all_race_results = self.db_handler.get_race_results(None, 2025)
         all_race_results = flatten_race_results(all_race_results)
         # convert to all_race_results to a pandas DataFrame
         # convert all_race_results to a pandas DataFrame
