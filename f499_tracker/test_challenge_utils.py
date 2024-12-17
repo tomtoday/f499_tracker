@@ -1,11 +1,12 @@
 from unittest import TestCase
 from parameterized import parameterized
-from challenge_utils import challenge_score_v2
+from challenge_utils import challenge_score_v2, dentist_ir
 
 SPRINT_RACE_IN_TICKS = 20 * 60 * 10000  # 20 minutes
 IMSA_RACE_IN_TICKS = 50 * 60 * 10000  # 50 minutes
 ENDURO_RACE_IN_TICKS = 360 * 60 * 10000  # 6hrs
 ROAR_RACE_IN_TICKS = 144 * 60 * 10000  # 2.4hrs
+
 
 class TestChallengeScoreV2(TestCase):
 
@@ -24,7 +25,8 @@ class TestChallengeScoreV2(TestCase):
         ("missed_race", 0, 35, 0, 11, 33, 241, 0, 0),
         ("MPRL race example", 0, 35, 0, 11, 33, 241, 0, 0),
     ])
-    def test_challenge_score_v2(self, name, race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating, laps_complete, expected):
+    def test_challenge_score_v2(self, name, race_length, race_participants, incidents, qualifying_position, finish_pos,
+                                safety_rating, laps_complete, expected):
         result = challenge_score_v2(
             race_length=race_length,
             race_participants=race_participants,
@@ -35,3 +37,27 @@ class TestChallengeScoreV2(TestCase):
             laps_complete=laps_complete
         )
         self.assertEqual(expected, result)
+
+    # test the dentist_ir method using @parameterized_expand
+    @parameterized.expand([
+        (25, 369),
+        (10, 200),
+        (3, 100),
+        (23, 469),
+        (23, 499),
+        (71, 130),
+        (71, 279),
+        (71, 420),
+        (71, 480),
+        (33, 130),
+        (33, 279),
+        (33, 420),
+        (33, 480),
+        (8, 130),
+        (8, 279),
+        (8, 420),
+        (8, 480),
+    ])
+    def test_dentist_ir(self, incoming_ir, current_sr):
+        result_ir = dentist_ir(incoming_ir, current_sr)
+        print("--------------------")
