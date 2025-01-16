@@ -1,3 +1,8 @@
+from datetime import datetime, timedelta
+from typing import Optional
+
+from f499_tracker.config import Config
+from f499_tracker.models.dataclasses import RaceData
 from f499_tracker.utils import convert_ticks_to_timedelta
 
 LONG_RACE_LENGTH = 45
@@ -7,7 +12,8 @@ def challenge_score(start, finish, incident_count):
     return (start - finish) + (4 if incident_count == 0 else -1 * (2 * incident_count))
 
 
-def challenge_score_v2(race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating, laps_complete):
+def challenge_score_v2(race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating,
+                       laps_complete):
     # print the values of the parameters
     race_length_in_minutes = convert_ticks_to_timedelta(race_length).seconds // 60
     print(
@@ -29,7 +35,9 @@ def challenge_score_v2(race_length, race_participants, incidents, qualifying_pos
     print(f"calculated_challenge_score: {calculated_challenge_score}")
     return calculated_challenge_score
 
-def challenge_score_v3(race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating, laps_complete):
+
+def challenge_score_v3(race_length, race_participants, incidents, qualifying_position, finish_pos, safety_rating,
+                       laps_complete):
     race_length_in_minutes = convert_ticks_to_timedelta(race_length).seconds // 60
     print(
         f'race_length_in_minutes: {race_length_in_minutes}, race_participants: {race_participants}, incidents: {incidents}, '
@@ -59,6 +67,7 @@ def qualifying_score(qualifying_position, race_participants):
     else:
         return 0
 
+
 def race_score(finish_position, race_participants):
     finish_percentile = finish_position / race_participants
     print(f"finish_percentile: {finish_percentile}")
@@ -74,6 +83,7 @@ def race_score(finish_position, race_participants):
         return 1
     else:
         return -1
+
 
 def race_score_v3(finish_position, race_participants):
     finish_percentile = finish_position / race_participants
@@ -119,6 +129,7 @@ def incident_score(incidents, race_time_leveller, safety_rating):
     score = round(score, 1)
     return score
 
+
 def incident_score_v3(incidents, race_time_leveller, safety_rating):
     if incidents == 0:
         score = 6
@@ -149,45 +160,38 @@ def incident_score_v3(incidents, race_time_leveller, safety_rating):
 
 def session_link(subsession_id, new_ui=False):
     if new_ui:
-        tmpl = "https://members-ng.iracing.com/racing/results-stats/results?subsessionid="
+        tmpl = "https://members-ng.iracing.com/web/racing/results-stats/results?subsessionid="
     else:
         tmpl = "https://members.iracing.com/membersite/member/EventResult.do?&subsessionid="
 
     return f"{tmpl}{subsession_id}"
 
 
-def construct_499_race_data(raw_result, racer_name):
+def construct_499_race_data(raw_result, racer_name, subsession_id=None):
     start_position = raw_result['starting_position_in_class'] + 1
     finish_position = raw_result['finish_position_in_class'] + 1
-    week_number = raw_result['race_week_num'] + 1
+    week_number = raw_result.get('race_week_num', 998) + 1
+    season_week_number = calculate_week_number(raw_result['start_time'])
     _499_points = challenge_score(start_position, finish_position, raw_result['incidents'])
-    iracing_session_link = session_link(raw_result['subsession_id'], True)
+    iracing_session_link = session_link(raw_result.get('subsession_id', subsession_id), True)
 
-    return {
-        "start_position": start_position,
-        "finish_position": finish_position,
-        "incident_count": (raw_result['incidents']),
-        "track_name": (raw_result['track']['track_name']),
-        "subsession_id": (raw_result['subsession_id']),
-        "start_time": (raw_result['start_time']),
-        "week_number": week_number,
-        "season_year": (raw_result['season_year']),
-        "season_quarter": (raw_result['season_quarter']),
-        "_499_points": _499_points,
-        "session_link": iracing_session_link,
-        "series_name": (raw_result['series_name']),
-        "series_id": (raw_result['series_id']),
-        "racer_name": racer_name,
-        "cust_id": raw_result['cust_id'],
-        "car_name": raw_result['car_name'],
-        "license_category": raw_result['license_category'],
-        "laps_complete": raw_result['license_category'],
-    }
+    data = RaceData(start_position=start_position, finish_position=finish_position,
+                    incident_count=raw_result['incidents'], track_name=raw_result['track']['track_name'],
+                    subsession_id=raw_result['subsession_id'], start_time=raw_result['start_time'],
+                    series_week_number=week_number, season_week_number=season_week_number,
+                    season_year=raw_result['season_year'], season_quarter=raw_result['season_quarter'],
+                    _499_points=_499_points, session_link=iracing_session_link, series_name=raw_result['series_name'],
+                    series_id=raw_result['series_id'], racer_name=racer_name, cust_id=raw_result['cust_id'],
+                    car_name=raw_result['car_name'], license_category=raw_result['license_category'],
+                    laps_complete=raw_result['license_category'])
+    return data
+
 
 def construct_simplified_499_race_data(raw_result, racer_name):
     start_position = raw_result['starting_position_in_class'] + 1
     finish_position = raw_result['finish_position_in_class'] + 1
     week_number = raw_result
+
 
 def sr_weight(current_sr):
     if current_sr < 200:
@@ -200,6 +204,7 @@ def sr_weight(current_sr):
         return 1.15
     elif current_sr <= 499:
         return 1.2
+
 
 def dentist_ir(earned_ir, current_sr):
     print(f"IR Earned in race: {earned_ir}, Current driver SR: {current_sr}")
@@ -218,3 +223,15 @@ def map_sr_modifier(input_value, min_input=100, max_input=499, min_output=0.50, 
     # Basic linear mapping calculation
     result = min_output + ((input_value - min_input) / (max_input - min_input)) * (max_output - min_output)
     return result
+
+
+def calculate_week_number(date_str: str) -> Optional[int]:
+    date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
+    for season in Config.SEASON_INFO.values():
+        for season_info in season:
+            start_date = datetime.strptime(season_info['start_date'], '%Y-%m-%dT%H:%M:%SZ')
+            end_date = start_date + timedelta(weeks=season_info['weeks_in_season'])
+            if start_date <= date <= end_date:
+                week_number = (date - start_date).days // 7 + 1
+                return week_number
+    return None

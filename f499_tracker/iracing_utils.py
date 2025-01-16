@@ -1,9 +1,5 @@
-# This method expects full race result JSON data and a customer ID
-import math
-
 import pandas as pd
-
-from f499_tracker.challenge_utils import challenge_score_v2
+from f499_tracker.challenge_utils import challenge_score_v2, challenge_score_v3
 
 # These are the keys that can only be retrieved from an additional API call for subsession results
 DETAIL_DATA_KEYS = [
@@ -19,7 +15,6 @@ DETAIL_DATA_KEYS = [
     'laps_complete',
     'num_entries'
 ]
-
 
 def extract_values_from_race_result(data, cust_id):
     # Find the first session that matches the criteria
@@ -126,7 +121,8 @@ def augment_race_data(iracing_api_client, race_data):
         # first check to see if this result has already been augmented
         # you know if it has been augmented if it has valid values for the keys in DETAIL_DATA_KEYS:
 
-        if all(simple_result.get(key) not in [None, ''] and not pd.isna(simple_result.get(key)) for key in DETAIL_DATA_KEYS):
+        if all(simple_result.get(key) not in [None, ''] and not pd.isna(simple_result.get(key)) for key in
+               DETAIL_DATA_KEYS):
             print(f"Skipping {simple_result['subsession_id']} because it has already been augmented")
             augmented_race_data.append(simple_result)
             continue
@@ -148,12 +144,12 @@ def augment_race_data(iracing_api_client, race_data):
         # The primary example of this case in a INDYCAR series result. The simple result is categorized as Forumla.
         # When you get the detailed result, it is categorized as Oval when the series is at an Oval track.
         # We need to skip this result because dentists don't drive ovals!
-        normalized_category_from_detailed_results = detailed_api_result.get('license_category', '').replace('_', ' ').lower()
+        normalized_category_from_detailed_results = detailed_api_result.get('license_category', '').replace('_',
+                                                                                                            ' ').lower()
         normalized_category_from_series_results = simple_result.get('license_category', '').replace('_', ' ').lower()
         if normalized_category_from_detailed_results != normalized_category_from_series_results:
             print(f"Skipping {subsession_id} because it is not the correct category")
             continue
-
 
         # extract the iracing values from the result
         extracted_data = extract_values_from_race_result(detailed_api_result, simple_result['cust_id'])
@@ -164,13 +160,21 @@ def augment_race_data(iracing_api_client, race_data):
         # calculate the challenge score v2
         racing_time = simple_result['average_lap'] * simple_result['laps_complete']
         simple_result['challenge_points_v2'] = challenge_score_v2(racing_time,
-                                                           simple_result['num_entries'],
-                                                           simple_result['incident_count'],
-                                                           simple_result['start_position'],
-                                                           simple_result['finish_position'],
-                                                           simple_result['new_sub_level'],
-                                                           simple_result['laps_complete']
-                                                           )
+                                                                  simple_result['num_entries'],
+                                                                  simple_result['incident_count'],
+                                                                  simple_result['start_position'],
+                                                                  simple_result['finish_position'],
+                                                                  simple_result['new_sub_level'],
+                                                                  simple_result['laps_complete']
+                                                                  )
+        simple_result['challenge_points_v3'] = challenge_score_v3(racing_time,
+                                                                  simple_result['num_entries'],
+                                                                  simple_result['incident_count'],
+                                                                  simple_result['start_position'],
+                                                                  simple_result['finish_position'],
+                                                                  simple_result['new_sub_level'],
+                                                                  simple_result['laps_complete']
+                                                                  )
 
         augmented_race_data.append(simple_result)
         print(f"Augmented {subsession_id} with fake internet points data")

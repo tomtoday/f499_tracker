@@ -2,6 +2,9 @@ import os
 
 
 class Config:
+    # DB_NAME = '20250115_tester.db'
+    DB_NAME = 'race_data.db'
+
     # F499 Challenge constants
     # This is the list of strings that will be used to search for series in the iRacing API
     F499_SEASON3_SERIES_KEYWORDS = [
@@ -28,6 +31,7 @@ class Config:
     # TRACKER_SHEET_NAME = "Top Dentist 2024S3W12 Tracker"
     # TRACKER_SHEET_NAME = "F499 2024S4 Challenge"
     TRACKER_SHEET_NAME = "F499 2025S1 Challenge"
+    # TRACKER_SHEET_NAME = "TESTING F499 2025S1 Challenge"
 
     # PARTICIPANT_WORKSHEET_ID = 935466926
     PARTICIPANT_WORKSHEET_ID = 1419950067
@@ -39,7 +43,7 @@ class Config:
     SHEET_COLUMN_NAMES = {
         'season_year': 'Year',
         'season_quarter': 'Quarter',
-        'week_number': 'Week',
+        'season_week_number': 'Week',
         'racer_name': 'Driver',
         'license_category': 'License Category',
         'start_time': 'Start Time',
@@ -65,5 +69,63 @@ class Config:
         'new_sub_level': 'New Sub Level',
         'series_id': 'Series ID',
         'subsession_id': 'Subsession ID',
-        'cust_id': 'Customer ID'
+        'cust_id': 'Customer ID',
+        'series_week_number': 'Series Week',
     }
+
+    SEASON_INFO = {
+        2024: [
+            {
+                'season_year': 2024,
+                'season_number': 1,
+                'start_date': '2023-12-12T00:00:00Z',
+                'weeks_in_season': 12
+            },
+            {
+                'season_year': 2024,
+                'season_number': 2,
+                'start_date': '2024-03-12T00:00:00Z',
+                'weeks_in_season': 12
+            },
+            {
+                'season_year': 2024,
+                'season_number': 3,
+                'start_date': '2024-06-11T00:00:00Z',
+                'weeks_in_season': 12
+            },
+            {
+                'season_year': 2024,
+                'season_number': 4,
+                'start_date': '2024-09-10T00:00:00Z',
+                'weeks_in_season': 13
+            }
+        ],
+        2025: [
+            {
+                'season_year': 2025,
+                'season_number': 1,
+                'start_date': '2024-12-17T00:00:00Z',
+                'weeks_in_season': 12
+            },
+            {
+                'season_year': 2025,
+                'season_number': 2,
+                'start_date': '2025-03-18T00:00:00Z',
+                'weeks_in_season': 12
+            },
+            {
+                'season_year': 2025,
+                'season_number': 3,
+                'start_date': '2025-06-20T00:00:00Z',
+                'weeks_in_season': 12
+            },
+            {
+                'season_year': 2025,
+                'season_number': 4,
+                'start_date': '2025-09-12T00:00:00Z',
+                'weeks_in_season': 12
+            }
+        ]
+    }
+
+

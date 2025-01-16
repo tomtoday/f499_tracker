@@ -83,7 +83,7 @@ class GoogleSheets:
 
         sheet = GoogleSheets.get_gspread_sheet(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID)
         # Clear the sheet so that we can write the now complete new data
-        # sheet.clear()
+        sheet.clear()
         # write df to the sheet, including the header
         sheet.update([df.columns.values.tolist()] + df.values.tolist())
 

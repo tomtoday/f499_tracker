@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, joinedload
 from datetime import datetime
 
-from f499_tracker.challenge_utils import challenge_score_v2, challenge_score_v3
+from f499_tracker.challenge_utils import challenge_score_v2, challenge_score_v3, calculate_week_number, session_link
 from f499_tracker.models import Race, RaceResult
 from f499_tracker.models.race import Base
 
@@ -58,7 +58,8 @@ class DBHandler:
         if race:
             race.season_year = data['season_year']
             race.season_quarter = data['season_quarter']
-            race.week_number = data['week_number']
+            race.series_week_number = data['series_week_number']
+            race.season_week_number = data['season_week_number']
             race.series_name = data['series_name']
             race.series_id = data['series_id']
             race.start_time = start_time
@@ -70,7 +71,8 @@ class DBHandler:
             race = Race(
                 season_year=data['season_year'],
                 season_quarter=data['season_quarter'],
-                week_number=data['week_number'],
+                series_week_number=data['series_week_number'],
+                season_week_number=data['season_week_number'],
                 series_name=data['series_name'],
                 series_id=data['series_id'],
                 start_time=start_time,
@@ -146,9 +148,9 @@ class DBHandler:
         session.close()
         return results
 
-    def update_all_results(self):
+    def update_all_results_challenge_points_v3(self):
         # This method should iterate through all the race results in the database
-        # and update the challenge_points_v2 by recalculating the score based on the
+        # and update the challenge_points_v3 by recalculating the score based on the
         # current data in the database.
         session = self.Session()
 
@@ -163,6 +165,38 @@ class DBHandler:
                 result.new_sub_level,
                 result.laps_complete
             )
+        session.commit()
+        session.close()
+
+    def update_all_season_weeks(self):
+        # This method should iterate through all the race results in the database
+        # and update the season_week values by calculating them based on the
+        # start_time of each race in the database.
+        session = self.Session()
+
+        results = session.query(Race).all()
+        for result in results:
+            start_time = result.start_time
+            # convert start_time to a time string in the format like "2025-01-12T00:00:00Z"
+            start_time_str = start_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+            season_week_number = calculate_week_number(start_time_str)
+            print("Updating season: start time: ", start_time_str, "\n series week number: ", result.series_week_number, "\n calculated week number: ", season_week_number)
+            result.season_week_number = season_week_number
+
+        session.commit()
+        session.close()
+
+    def update_all_session_links(self):
+        # This method should iterate through all the race results in the database
+        # and update the season_week values by calculating them based on the
+        # start_time of each race in the database.
+        session = self.Session()
+
+        results = session.query(Race).all()
+        for result in results:
+            s_link = session_link(result.subsession_id, True)
+            result.session_link = s_link
+
         session.commit()
         session.close()
 

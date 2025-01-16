@@ -3,9 +3,11 @@ from oauth2client.service_account import ServiceAccountCredentials
 from f499_tracker.config import Config
 from f499_tracker.challenge_utils import construct_499_race_data
 from f499_tracker.google_sheets_utils import GoogleSheets
-from f499_tracker.iracing_utils import augment_race_data, tidy_race_data
+from f499_tracker.iracing_utils import augment_race_data, tidy_race_data, extract_values_from_race_result
 from f499_tracker.utils import write_results_to_csv_file, write_results_to_json_file
 from f499_tracker.db_handler import DBHandler, flatten_race_results
+from f499_tracker.challenge_utils import challenge_score_v2, challenge_score_v3
+
 
 import time
 import gspread
@@ -134,7 +136,7 @@ class TrackerSQL:
                     continue
 
         # sort race_data_list by start_time, descending
-        race_data_list.sort(key=lambda x: x['start_time'])
+        race_data_list.sort(key=lambda x: x.start_time)
 
         print("Done gathering data")
         return race_data_list
@@ -193,8 +195,7 @@ class TrackerSQL:
             self.db_handler.insert_race_data(new_race_data)
 
         # temp, update the results with challenge_points_v3
-        self.db_handler.update_all_results()
-        # GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)
+        self.db_handler.update_all_results_challenge_points_v3()
 
         # select all the data from the database and convert it to a DataFrame
         all_race_results = self.db_handler.get_race_results(None, 2025)
@@ -212,3 +213,50 @@ class TrackerSQL:
                                                               start_range_begin=start_time,
                                                               finish_range_begin=end_time)
         write_results_to_json_file(res, f'results_{start_time}_to_{end_time}_cust_{custo_id}')
+
+    def get_results_for_subsession(self, subsession_id, cust_id):
+        res = self.iracing_api_client.result(subsession_id)
+        # res will be a json object with the results for the subsession. I am interested in the item that is located at
+        # the JSON PATH /session_results/2/results. The session_results is a list of dictionaries. The dictionary with the property
+        # "simsession_name" that has the value "RACE" is what I am interested in. The results property of that dictionary
+        # is an array of dictionaries that contain the results for each driver in the subsession race. I am interested in
+        # the dictionary that has the property "custid" that matches the cust_id that I am interested in.
+        desired_race_result = self.find_race_result(res, cust_id)
+
+
+        base_data = construct_499_race_data(desired_race_result, cust_id)
+        simple_result = extract_values_from_race_result(base_data, cust_id)
+        simple_result.update(base_data)
+        racing_time = simple_result['average_lap'] * simple_result['laps_complete']
+        extracted_data['challenge_points_v2'] = challenge_score_v3(racing_time,
+                                                                  simple_result['num_entries'],
+                                                                  simple_result['incident_count'],
+                                                                  simple_result['start_position'],
+                                                                  simple_result['finish_position'],
+                                                                  simple_result['new_sub_level'],
+                                                                  simple_result['laps_complete']
+                                                                  )
+        print(extracted_data)
+
+    @staticmethod
+    def find_race_result(data, cust_id):
+        # Extract the session results
+        session_results = data.get('session_results', [])
+
+        # Find the dictionary with simsession_name "RACE"
+        race_session = next((session for session in session_results if session.get('simsession_name') == 'RACE'), None)
+
+        if race_session:
+            # Extract the results array
+            race_results = race_session.get('results', [])
+
+            # Find the dictionary with the matching cust_id
+            driver_result = next((result for result in race_results if result.get('cust_id') == cust_id), None)
+
+            if driver_result:
+                return driver_result
+            else:
+                print(f"No results found for cust_id {cust_id}")
+        else:
+            print("No race session found")
+

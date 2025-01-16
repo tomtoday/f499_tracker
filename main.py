@@ -47,7 +47,7 @@ def league_season_run():
 def latest_season_run():
     start_time = datetime.now()
     print(f"start_time: {start_time}")
-    tracker = TrackerSQL()
+    tracker = TrackerSQL(Config.DB_NAME)
     tracker.generate_challenge_stats(2025, 1)
 
     end_time = datetime.now()
@@ -67,9 +67,21 @@ def mark_last_run(end_time):
         GoogleSheets.simple_write_to_sheet(Config.TRACKER_SHEET_NAME, Config.LAST_RUN_SHEET_ID, last_updated_data)
 
 
+def challenge_stats_for_race(subsession_id, cust_id):
+    start_time = datetime.now()
+    print(f"start_time: {start_time}")
+    tracker = TrackerSQL()
+    tracker.get_results_for_subsession(subsession_id, cust_id)
+
+
 if __name__ == '__main__':
     # season_participant_run()
     # league_season_run()
 
     latest_season_run()
 
+    # tony_cust_id = 227267
+    # challenge_stats_for_race(73894739, tony_cust_id)
+
+    # tracker = TrackerSQL(Config.DB_NAME)
+    # tracker.db_handler.update_all_session_links()
