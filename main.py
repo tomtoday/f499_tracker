@@ -1,12 +1,11 @@
-import cProfile
-import json
 from datetime import datetime
 
 import pytz
 
 from f499_tracker.config import Config
 from f499_tracker.google_sheets_utils import GoogleSheets
-from f499_tracker.sandbox import TestAPI
+from f499_tracker.iracing_client import IRacingAPIHandler
+from f499_tracker.simple_tracker import SimpleTracker
 from f499_tracker.tracker import Tracker
 from f499_tracker.tracker_sql import TrackerSQL
 
@@ -73,15 +72,31 @@ def challenge_stats_for_race(subsession_id, cust_id):
     tracker = TrackerSQL()
     tracker.get_results_for_subsession(subsession_id, cust_id)
 
+def get_series():
+    api = IRacingAPIHandler()
+    series = api.get_499_series()
+    # series is a list of tuples. Get the first item of each tuple and put that into a list
+    return series
 
 if __name__ == '__main__':
     # season_participant_run()
     # league_season_run()
 
-    latest_season_run()
+    # latest_season_run()
 
-    # tony_cust_id = 227267
-    # challenge_stats_for_race(73894739, tony_cust_id)
+    api = IRacingAPIHandler()
+    iracing_api_client = api.client
 
-    # tracker = TrackerSQL(Config.DB_NAME)
-    # tracker.db_handler.update_all_session_links()
+    tracker = SimpleTracker(iracing_api_client, "2025s2_dev.db")
+    tracker.run()
+
+    series = get_series()
+    zero_ex_data = tracker.get_first_zero_ex_data(series)
+    for item in zero_ex_data:
+        print(item)
+
+    GoogleSheets.write_results_to_zero_ex_sheet(zero_ex_data)
+
+    end_time = datetime.now()
+    mark_last_run(end_time)
+

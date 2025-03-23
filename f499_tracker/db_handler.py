@@ -1,9 +1,11 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text, Row
 from sqlalchemy.orm import sessionmaker, joinedload
 from datetime import datetime
 
+from sqlalchemy.util.preloaded import sql_dml
+
 from f499_tracker.challenge_utils import challenge_score_v2, challenge_score_v3, calculate_week_number, session_link
-from f499_tracker.models import Race, RaceResult
+from f499_tracker.models import Race, RaceResult, Participant
 from f499_tracker.models.race import Base
 
 
@@ -52,6 +54,10 @@ class DBHandler:
         session.close()
 
     def upsert_race_information(self, data, session):
+        # if data is a RaceData object, convert it to a dictionary
+        if hasattr(data, '__dict__'):
+            data = data.__dict__
+
         start_time = datetime.strptime(data['start_time'], '%Y-%m-%dT%H:%M:%SZ')
         # Upsert for Race
         race = session.query(Race).filter_by(subsession_id=data['subsession_id']).first()
@@ -82,8 +88,9 @@ class DBHandler:
                 license_category=data['license_category'],
                 num_entries=data['num_entries']
             )
-            session.add(race)
-            session.flush()  # Ensure race.id is available
+
+        session.add(race)
+        session.flush()  # Ensure race.id is available
         # Upsert for RaceResult
         race_result = session.query(RaceResult).filter_by(race_id=race.id, cust_id=data['cust_id']).first()
         if race_result:
@@ -104,6 +111,7 @@ class DBHandler:
             race_result.average_lap = data['average_lap']
             race_result.laps_complete = data['laps_complete']
             race_result.challenge_points_v2 = data['challenge_points_v2']
+            race_result.strength_of_field = data['strength_of_field']
         else:
             race_result = RaceResult(
                 race_id=race.id,
@@ -124,9 +132,12 @@ class DBHandler:
                 new_sub_level=data['new_sub_level'],
                 average_lap=data['average_lap'],
                 laps_complete=data['laps_complete'],
-                challenge_points_v2=data['challenge_points_v2']
+                challenge_points_v2=data['challenge_points_v2'],
+                challenge_points_v3=data['challenge_points_v3'],
+                strength_of_field=data['strength_of_field']
             )
-            session.add(race_result)
+
+        session.add(race_result)
 
     def get_race_results(self, cust_id=None, season_year=None, season_quarter=None, season_week=None):
         session = self.Session()
@@ -180,7 +191,8 @@ class DBHandler:
             # convert start_time to a time string in the format like "2025-01-12T00:00:00Z"
             start_time_str = start_time.strftime('%Y-%m-%dT%H:%M:%SZ')
             season_week_number = calculate_week_number(start_time_str)
-            print("Updating season: start time: ", start_time_str, "\n series week number: ", result.series_week_number, "\n calculated week number: ", season_week_number)
+            print("Updating season: start time: ", start_time_str, "\n series week number: ", result.series_week_number,
+                  "\n calculated week number: ", season_week_number)
             result.season_week_number = season_week_number
 
         session.commit()
@@ -202,3 +214,139 @@ class DBHandler:
 
     def close(self):
         self.engine.dispose()
+
+    def upsert_participants(self, participants):
+        session = self.Session()
+        result = []
+        for participant in participants:
+            cust_id_from_signup = participant[0]
+            existing_participant = session.query(Participant).filter_by(cust_id=cust_id_from_signup).first()
+
+            cust_id = cust_id_from_signup
+            preferred_name = participant[1]
+            start_date_time_str = participant[2]
+            end_date_time_str = participant[3]
+
+            start_time = None
+            end_time = None
+            if start_date_time_str not in [None, '']:
+                start_time = datetime.fromisoformat(start_date_time_str)
+
+            if end_date_time_str not in [None, '']:
+                 end_time = datetime.fromisoformat(end_date_time_str)
+
+            if existing_participant:
+                existing_participant.cust_id = cust_id
+                existing_participant.preferred_name = preferred_name
+                existing_participant.start_date_time = start_time
+                existing_participant.end_date_time = end_time
+                db_participant = existing_participant
+            else:
+                db_participant = Participant(
+                    cust_id=cust_id,
+                    preferred_name=preferred_name,
+                    start_date_time=start_time,
+                    end_date_time=end_time
+                )
+                session.add(db_participant)
+
+            # Create a detached copy of participant attributes
+            participant_copy = {
+                'id': db_participant.id,
+                'cust_id': db_participant.cust_id,
+                'preferred_name': db_participant.preferred_name,
+                'start_date_time': db_participant.start_date_time,
+                'end_date_time': db_participant.end_date_time
+            }
+            result.append(participant_copy)
+        try:
+            session.commit()
+
+            # Create new Participant objects that aren't bound to the session
+            detached_participants = []
+            for p_data in result:
+                detached_participant = Participant(
+                    id=p_data['id'],
+                    cust_id=p_data['cust_id'],
+                    preferred_name=p_data['preferred_name'],
+                    start_date_time=p_data['start_date_time'],
+                    end_date_time=p_data['end_date_time']
+                )
+                detached_participants.append(detached_participant)
+
+            return detached_participants
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
+    def get_participants(self):
+        session = self.Session()
+        return session.query(Participant).order_by(Participant.preferred_name.asc()).all()
+
+    def first_to_zero_ex(self, series_data):
+        series_ids = [series[0] for series in series_data]
+        series_names = [series[1] for series in series_data]
+        # For SQLite, we need to expand the IN clause with individual parameter names
+        placeholders = ','.join(f':id{i}' for i in range(len(series_ids)))
+
+        query = f"""
+        WITH ranked_results AS (
+            SELECT
+                rr.racer_name, rr.incident_count,
+                r.series_name,
+                r.start_time,
+                r.season_week_number,
+                r.session_link,
+                ROW_NUMBER() OVER (PARTITION BY r.series_name, r.season_week_number ORDER BY r.start_time ASC) AS rn
+            FROM
+                race_results rr
+            JOIN
+                races r ON rr.race_id = r.id
+            WHERE
+                rr.incident_count = 0 AND rr.laps_complete > 0 AND r.series_id IN ({placeholders})
+        )
+        SELECT
+            *
+        FROM
+            ranked_results
+        WHERE
+            rn = 1
+        ORDER BY
+            season_week_number, series_name asc, start_time asc;
+        """
+        session = self.Session()
+
+        # Create a dictionary of named parameters
+        params = {f'id{i}': id_val for i, id_val in enumerate(series_ids)}
+
+        # Execute with named parameters
+        sql_results = session.execute(text(query), params)
+        sql_results = sql_results.fetchall()
+
+        #results are a list of SQLAlchemy Row objects, we need to convert them to a list of dictionaries
+        results = [row._mapping for row in sql_results]
+
+
+        # we need to make sure that we have a result for each series_name in series_names for season_week_number 1
+        # if one of the series_names in missing, we need to add a dummy result (kind of a hack)
+        series_names_set = set([result.series_name for result in sql_results])
+        missing_series_names = set(series_names) - series_names_set
+
+        for series_name in missing_series_names:
+            # create a dummy row to insert into the results, since this is a list of SQLAlchemy Row objects
+            # and we cannot create a new Row object, I need something that behaves like a Row object
+            # I will use a dictionary
+            dummy_row = {
+                'racer_name': '',
+                'incident_count': 0,
+                'series_name': series_name,
+                'start_time': '',
+                'season_week_number': 1,
+                'session_link': '',
+                'rn': 1
+            }
+            results.append(dummy_row)
+
+        return results

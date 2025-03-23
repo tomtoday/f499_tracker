@@ -186,7 +186,6 @@ class TrackerSQL:
         new_race_data = self.get_new_races(race_data)
 
         if new_race_data:
-            # Make additional API calls to fill out more
             # Make additional API calls to fill out more detail on each race
             new_race_data = augment_race_data(self.iracing_api_client, new_race_data)
 
@@ -200,8 +199,8 @@ class TrackerSQL:
         # select all the data from the database and convert it to a DataFrame
         all_race_results = self.db_handler.get_race_results(None, 2025)
         all_race_results = flatten_race_results(all_race_results)
-        # convert to all_race_results to a pandas DataFrame
-        # convert all_race_results to a pandas DataFrame
+
+        # # convert all_race_results to a pandas DataFrame
         all_race_results_df = pd.DataFrame([result for result in all_race_results])
 
         GoogleSheets.clear_and_write_results_to_tracking_sheet(all_race_results_df)
@@ -260,3 +259,29 @@ class TrackerSQL:
         else:
             print("No race session found")
 
+    def season_tracks(self):
+        # Get series seasons for 2025 Q1
+        series_seasons = self.iracing_api_client.series_seasons(season_year=2025, season_quarter=1)
+
+        # Filter for open wheel and sports car categories
+        open_wheel_sports_car_series = [
+            series for series in series_seasons
+            if series['category_id'] in [2, 5]  # Adjust category IDs as needed
+        ]
+
+        # Retrieve and print track details for each series
+        series_tracks = {}
+        for series in open_wheel_sports_car_series:
+            # Retrieve series details
+            series_details = self.iracing_api_client.series_get(series['series_id'])
+
+            # Extract track names for the season
+            track_names = [week['track']['track_name'] for week in series_details['tracks']]
+
+            series_tracks[series['series_name']] = track_names
+
+        # Print results
+        for series_name, tracks in series_tracks.items():
+            print(f"Series: {series_name}")
+            for track in tracks:
+                print(f"  - {track}")
