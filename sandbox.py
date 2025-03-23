@@ -13,3 +13,11 @@ class TestAPI:
         res = self.iracing_api_client.result(ss_id)
         write_results_to_json_file(res, f'subsession_{ss_id}')
 
+    def member_info(self, cust_id):
+        res = self.iracing_api_client.member(cust_id)
+        write_results_to_json_file(res, f'member_{cust_id}')
+
+test_api = TestAPI()
+test_api.test_subsession_results(66906314)
+test_api.member_info(643506)
+
