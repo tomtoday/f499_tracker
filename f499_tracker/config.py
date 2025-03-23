@@ -2,8 +2,9 @@ import os
 
 
 class Config:
-    # DB_NAME = '20250115_tester.db'
-    DB_NAME = 'race_data.db'
+    DB_NAME = "2025s2_dev.db"
+    SEASON_YEAR = 2025
+    SEASON_QUARTER = 2
 
     # F499 Challenge constants
     # This is the list of strings that will be used to search for series in the iRacing API
