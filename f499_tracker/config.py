@@ -2,18 +2,18 @@ import os
 
 
 class Config:
-    # DB_NAME = '20250115_tester.db'
-    DB_NAME = 'race_data.db'
+    DB_NAME = '"2025s2_dev.db"'
+    SEASON_YEAR = 2025
+    SEASON_QUARTER = 2
 
     # F499 Challenge constants
     # This is the list of strings that will be used to search for series in the iRacing API
-    F499_SEASON3_SERIES_KEYWORDS = [
+    F499_SERIES_KEYWORDS = [
         "LMP3",
-        "LMP2",
         "FIA Formula 4",
-        "Falken Tyre Sports Car",
-        "IMSA iRacing Series",
-        "IMSA Endurance"
+        "FIA F4",
+        "GT4",
+        "Sports Car Challenge by Falken Tyre",
     ]
 
     # iRacing API creds
@@ -27,18 +27,13 @@ class Config:
     EVENT_TYPE = 5  # Race
 
     # Google Sheets constants
-    # TRACKER_SHEET_NAME = "F499 Tracker v3"
-    # TRACKER_SHEET_NAME = "Top Dentist 2024S3W12 Tracker"
-    # TRACKER_SHEET_NAME = "F499 2024S4 Challenge"
-    TRACKER_SHEET_NAME = "F499 2025S1 Challenge"
-    # TRACKER_SHEET_NAME = "TESTING F499 2025S1 Challenge"
+    TRACKER_SHEET_NAME = "F499 2025S2 Challenge"
 
-    # PARTICIPANT_WORKSHEET_ID = 935466926
     PARTICIPANT_WORKSHEET_ID = 1419950067
     SERIES_WORKSHEET_ID = 2085237774
     RESULTS_WORKSHEET_ID = 1416763316
-    # LAST_RUN_SHEET_ID = None
     LAST_RUN_SHEET_ID = 1483679123
+    FIRST_ZERO_EX_SHEET_ID = 623987881
 
     SHEET_COLUMN_NAMES = {
         'season_year': 'Year',
@@ -71,6 +66,7 @@ class Config:
         'subsession_id': 'Subsession ID',
         'cust_id': 'Customer ID',
         'series_week_number': 'Series Week',
+        'strength_of_field': 'Strength of Field',
     }
 
     SEASON_INFO = {
@@ -127,5 +123,3 @@ class Config:
             }
         ]
     }
-
-

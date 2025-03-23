@@ -35,7 +35,7 @@ class GoogleSheets:
 
         df = pd.DataFrame(sheet.get_all_records())
         for index, row in df.iterrows():
-            retrieve_participants.append((row['cust_id'], row['driver_name']))
+            retrieve_participants.append((row['cust_id'], row['driver_name'], row['start_date_time'], row['end_date_time']))
 
         return retrieve_participants
 
@@ -88,17 +88,22 @@ class GoogleSheets:
         sheet.update([df.columns.values.tolist()] + df.values.tolist())
 
         # batch_format appropriate columns to be numbers with no decimal places
-        sheet.batch_format([{'range': 'A:A', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'B:B', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'C:C', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'E:E', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'G:G', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'K:K', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'L:L', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'M:M', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'N:N', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}},
-                            {'range': 'O:O', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}}
-                            ])
+        columns = (
+                ['A', 'B', 'C']
+                + [chr(i) for i in range(ord('K'), ord('R') + 1)] + [chr(i) for i in range(ord('W'), ord('Z') + 1)]
+                + ['AA', 'AB', 'AC', 'AD', 'AE']
+        )
+        sheet.batch_format(
+            [{'range': f'{col}:{col}', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}} for col in
+             columns])
+
+        # batch format appropriate columns to be numbers with 2 decimal places
+        columns = (
+            ['S', 'T', 'U', 'V']
+        )
+        sheet.batch_format(
+            [{'range': f'{col}:{col}', 'format': {'numberFormat': {'type': 'NUMBER', 'pattern': '0'}}} for col in
+             columns])
 
     @staticmethod
     def normalize_race_results_dataframe(df):
@@ -128,7 +133,6 @@ class GoogleSheets:
         sheet.update([[data[1]]], 'A2')
         # sheet.update('A1', data[0])
         # sheet.update('A2', data[1])
-
 
     @staticmethod
     def merge_race_data_with_gspread_data(race_data):
@@ -162,3 +166,12 @@ class GoogleSheets:
         merged_df.sort_values(by=['start_time', 'cust_id'], ascending=[False, True], inplace=True)
 
         return merged_df.to_dict('records')
+
+    @staticmethod
+    def write_results_to_zero_ex_sheet(data):
+        pd_data = pd.DataFrame(data)
+        sheet = GoogleSheets.get_gspread_sheet(Config.TRACKER_SHEET_NAME, Config.FIRST_ZERO_EX_SHEET_ID)
+        # Clear the sheet so that we can write the now complete new data
+        sheet.clear()
+        # write df to the sheet, including the header
+        sheet.update([pd_data.columns.values.tolist()] + pd_data.values.tolist())

@@ -212,3 +212,4 @@ class Tracker:
 
         # write to the gspread sheet
         GoogleSheets.append_to_gspread(Config.TRACKER_SHEET_NAME, Config.RESULTS_WORKSHEET_ID, filename_prefix)
+

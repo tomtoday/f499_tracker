@@ -24,7 +24,6 @@ class TestChallengeScoreV2(TestCase):
         ("many_incidents", SPRINT_RACE_IN_TICKS, 10, 16, 5, 5, 325, 20, -5.0),
         ("missed_race", 0, 35, 0, 11, 33, 241, 0, 0),
         ("MPRL race example", 0, 35, 0, 11, 33, 241, 0, 0),
-        ("Tony enduro 20250105", TONY_ENDURO_RACE_IN_TICKS,  )
     ])
     def test_challenge_score_v2(self, name, race_length, race_participants, incidents, qualifying_position, finish_pos,
                                 safety_rating, laps_complete, expected):
@@ -53,7 +52,7 @@ class TestChallengeScoreV2(TestCase):
         # ("many_incidents", SPRINT_RACE_IN_TICKS, 10, 16, 5, 5, 325, 20, -5.0),
         # ("missed_race", 0, 35, 0, 11, 33, 241, 0, 0),
         # ("MPRL race example", 0, 35, 0, 11, 33, 241, 0, 0),
-        ("Tony enduro 20250105", TONY_ENDURO_RACE_IN_TICKS, 17, 1, 17, 7, 361, 73, 999)
+        ("Tony enduro 20250105", TONY_ENDURO_RACE_IN_TICKS, 17, 1, 17, 7, 361, 73, 1)
     ])
     def test_challenge_score_v3(self, name, race_length, race_participants, incidents, qualifying_position, finish_pos,
                                 safety_rating, laps_complete, expected):
